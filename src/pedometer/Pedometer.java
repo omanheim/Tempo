@@ -120,7 +120,7 @@ public class Pedometer extends Activity {
         mCaloriesValueView = (TextView) findViewById(R.id.calories_value);
         mDesiredPaceView   = (TextView) findViewById(R.id.desired_pace_value);
 
-        mIsMetric = mPedometerSettings.isMetric();
+       /* mIsMetric = mPedometerSettings.isMetric();
         ((TextView) findViewById(R.id.distance_units)).setText(getString(
                 mIsMetric
                 ? R.string.kilometers
@@ -174,7 +174,7 @@ public class Pedometer extends Activity {
         }
         
         
-        displayDesiredPaceOrSpeed();
+        displayDesiredPaceOrSpeed();*/
     }
     
     private void displayDesiredPaceOrSpeed() {

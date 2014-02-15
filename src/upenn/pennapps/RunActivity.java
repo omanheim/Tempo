@@ -18,7 +18,7 @@ public class RunActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+		
 	/**
 	 * Exit.
 	 */
