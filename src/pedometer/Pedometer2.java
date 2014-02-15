@@ -124,13 +124,13 @@ public class Pedometer2 extends Activity {
         if (!mIsRunning) {
             mIsRunning = true;
             startService(new Intent(Pedometer2.this,
-                    StepService.class));
+                    StepService2.class));
         }
     }
     
     private void bindStepService() {
         bindService(new Intent(Pedometer2.this, 
-                StepService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
+                StepService2.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
     }
 
     private void unbindStepService() {
@@ -140,7 +140,7 @@ public class Pedometer2 extends Activity {
     private void stopStepService() {
         if (mService != null) {
             stopService(new Intent(Pedometer2.this,
-                  StepService.class));
+                  StepService2.class));
         }
         mIsRunning = false;
     }
@@ -154,7 +154,7 @@ public class Pedometer2 extends Activity {
     private static final int SPEED_MSG = 4;
  
     // TODO: unite all into 1 type of message
-    private StepService.ICallback mCallback = new StepService.ICallback() {
+    private StepService2.ICallback mCallback = new StepService2.ICallback() {
         public void stepsChanged(int value) {
             mHandler.sendMessage(mHandler.obtainMessage(STEPS_MSG, value, 0));
         }

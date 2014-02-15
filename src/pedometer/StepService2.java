@@ -1,7 +1,5 @@
 package pedometer;
 
-import pedometer.StepService.ICallback;
-import pedometer.StepService.StepBinder;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
