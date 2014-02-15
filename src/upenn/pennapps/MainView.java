@@ -32,6 +32,7 @@ import android.view.View;
 public class MainView extends View {
 
 	private ConcurrentHashMap<Integer, ArrayList<Song>> mSongs;
+	private boolean mSongsLoaded;
 
 	private class Song {
 
@@ -59,7 +60,8 @@ public class MainView extends View {
 		protected Void doInBackground(Song... params) {
 			String api_key = "TUKBKAR450KQF8BPA";
 			HttpClient client = new DefaultHttpClient();
-			for (Song song : params) {
+			for (int songIndex = 0; songIndex < params.length; songIndex++) {
+			    Song song = params[songIndex];
 				try {
 					String url = "http://developer.echonest.com/api/v4/song/search?"
 							+ "api_key="
@@ -84,9 +86,12 @@ public class MainView extends View {
 							instream.close();
 						}
 					}
-					if (songJSON.getJSONObject("response")
+					if (!songJSON.getJSONObject("response")
 							.getJSONObject("status").getString("message")
 							.equals("Success")) {
+						Thread.sleep(1000);
+						songIndex--;
+					} else {
 						JSONArray songs = songJSON.getJSONObject("response")
 								.getJSONArray("songs");
 						String songID = null;
@@ -127,17 +132,13 @@ public class MainView extends View {
 							}
 						}
 					}
-				} catch (ClientProtocolException e) {
-					Log.e("oli error", e.getMessage());
-					e.printStackTrace();
-				} catch (IOException e) {
-					Log.e("oli error", e.getMessage());
-					e.printStackTrace();
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					Log.e("oli error", e.getMessage());
 					e.printStackTrace();
 				}
 			}
+			
+			mSongsLoaded = true;
 			return null;
 		}
 
@@ -166,6 +167,7 @@ public class MainView extends View {
 	/**
          */
 	private void init() {
+		mSongsLoaded = false;
 		setBackgroundResource(R.drawable.watercolor);
 		mSongs = new ConcurrentHashMap<Integer, ArrayList<Song>>();
 
@@ -190,6 +192,10 @@ public class MainView extends View {
 		}
 		Song[] a = new Song[songs.size()];
 		new BPMScannerThread().execute(songs.toArray(a));
+	}
+	
+	public boolean songsLoaded() {
+		return mSongsLoaded;
 	}
 
 	/**
