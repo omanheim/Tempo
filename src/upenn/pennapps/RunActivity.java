@@ -2,16 +2,14 @@ package upenn.pennapps;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
 import android.view.Menu;
-import android.view.View;
 
-public class MainActivity extends Activity {
+public class RunActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.homepage);
+		setContentView(R.layout.activity_main);
 	}
 
 	@Override
@@ -22,19 +20,9 @@ public class MainActivity extends Activity {
 	}
 	
 	/**
-	 * Starts a new run.
-	 * @param v, the view
+	 * Exit.
 	 */
-	public void startRun(View v) {
-		Intent i = new Intent(this, RunActivity.class);
-		startActivity(i);
-	}
-	
-	/**
-	 * Exits the app.
-	 * @param v, the view
-	 */
-	public void quitGame(View v) {
+	public void end() {
 		finish();
 	}
 
