@@ -1,5 +1,6 @@
 package pedometer;
 
+import upenn.pennapps.R;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;

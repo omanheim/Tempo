@@ -1,5 +1,6 @@
 package pedometer;
 
+import upenn.pennapps.R;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
