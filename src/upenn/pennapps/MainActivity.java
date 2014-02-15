@@ -2,6 +2,7 @@ package upenn.pennapps;
 
 import upenn.pennapps.RunActivity;
 import android.os.Bundle;
+import pedometer.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
@@ -26,12 +27,10 @@ public class MainActivity extends Activity {
 	public void onRunButtonClick(View v){
 		Intent i = new Intent(this, RunActivity.class);
 		startActivityForResult(i, RunActivity_ID);
-	}
-	
-	/**
-	 * Starts a new run.
-	 * @param v, the view
-	 */
+//		Intent i = new Intent(this, Pedometer.class);
+//		startActivity(i);
+}
+
 //	public void startRun(View v) {
 //		Intent i = new Intent(this, RunActivity.class);
 //		startActivity(i);
