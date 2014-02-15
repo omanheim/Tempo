@@ -4,7 +4,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="@dimen/margin" 
-    android:background="@color/screen_background">
+    android:background="#fff">
+    
+    
     
     <LinearLayout android:id="@+id/row_1"
         android:orientation="horizontal" 
@@ -207,5 +209,11 @@
             android:layout_height="@dimen/button"/>
 
     </LinearLayout>
+    
+    <View
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent"
+        android:background="@drawable/watercolor"
+        android:alpha="0.7"/>
    
 </LinearLayout>
