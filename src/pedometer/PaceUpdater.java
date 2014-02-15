@@ -104,8 +104,6 @@ public class PaceUpdater implements StepListener {
             if (isMeaningfull && sum > 0) {
                 long avg = sum / mLastStepDeltas.length;
                 mPace = 60*1000 / avg;
-                
-            
             }
             else {
                 mPace = -1;
@@ -120,10 +118,12 @@ public class PaceUpdater implements StepListener {
             listener.paceChanged((int)mPace);
         }
     }
+
+	@Override
+	public void passValue() {
+		// TODO Auto-generated method stub
+		
+	}
     
-
-
-  
-
 }
 
