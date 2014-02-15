@@ -1,6 +1,5 @@
 package upenn.pennapps;
 
-import upenn.pennapps.RunActivity;
 import android.os.Bundle;
 import pedometer.*;
 import android.app.Activity;
@@ -17,31 +16,16 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.main, menu);
-//		return true;
-//	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
 	
 	public void onRunButtonClick(View v){
-		Intent i = new Intent(this, RunActivity.class);
+		Intent i = new Intent(this, Pedometer2.class);
 		startActivityForResult(i, RunActivity_ID);
-//		Intent i = new Intent(this, Pedometer.class);
-//		startActivity(i);
-}
-
-//	public void startRun(View v) {
-//		Intent i = new Intent(this, RunActivity.class);
-//		startActivity(i);
-//	}
-//	
-//	/**
-//	 * Exits the app.
-//	 * @param v, the view
-//	 */
-//	public void quitGame(View v) {
-//		finish();
-//	}
+	}
 
 }

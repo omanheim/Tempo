@@ -69,8 +69,7 @@ public class PaceUpdater implements StepListener {
     
     public void reloadSettings() {
         mShouldTellFasterslower = 
-            mSettings.shouldTellFasterslower()
-            && mSettings.getMaintainOption() == PedometerSettings.M_PACE;
+            mSettings.shouldTellFasterslower();
         notifyListener();
     }
     

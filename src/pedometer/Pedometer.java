@@ -75,12 +75,9 @@ public class Pedometer extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "[ACTIVITY] onCreate");
         super.onCreate(savedInstanceState);
-        
         mStepValue = 0;
         mPaceValue = 0;
-        
         setContentView(R.layout.pedometer);
-        
         mUtils = Utils.getInstance();
     }
     
@@ -98,7 +95,7 @@ public class Pedometer extends Activity {
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         mPedometerSettings = new PedometerSettings(mSettings);
         
-        mUtils.setSpeak(mSettings.getBoolean("speak", false));
+        //mUtils.setSpeak(mSettings.getBoolean("speak", false));
         
         // Read from preferences if the service was running on the last onPause
         mIsRunning = mPedometerSettings.isServiceRunning();
@@ -201,7 +198,6 @@ public class Pedometer extends Activity {
         }
 
         super.onPause();
-        savePaceSetting();
     }
 
     @Override
@@ -225,16 +221,15 @@ public class Pedometer extends Activity {
             if (mMaintain == PedometerSettings.M_PACE) {
                 mService.setDesiredPace((int)desiredPaceOrSpeed);
             }
-            else
-            if (mMaintain == PedometerSettings.M_SPEED) {
+            else if (mMaintain == PedometerSettings.M_SPEED) {
                 mService.setDesiredSpeed(desiredPaceOrSpeed);
             }
         }
     }
     
-    private void savePaceSetting() {
+   /* private void savePaceSetting() {
         mPedometerSettings.savePaceOrSpeedSetting(mMaintain, mDesiredPaceOrSpeed);
-    }
+    }*/
 
     private StepService mService;
     
@@ -363,6 +358,12 @@ public class Pedometer extends Activity {
         }
         return false;
     }
+    
+    private static final int STEPS_MSG = 1;
+    private static final int PACE_MSG = 2;
+    private static final int DISTANCE_MSG = 3;
+    private static final int SPEED_MSG = 4;
+    private static final int CALORIES_MSG = 5;
  
     // TODO: unite all into 1 type of message
     private StepService.ICallback mCallback = new StepService.ICallback() {
@@ -383,11 +384,6 @@ public class Pedometer extends Activity {
         }
     };
     
-    private static final int STEPS_MSG = 1;
-    private static final int PACE_MSG = 2;
-    private static final int DISTANCE_MSG = 3;
-    private static final int SPEED_MSG = 4;
-    private static final int CALORIES_MSG = 5;
     
     private Handler mHandler = new Handler() {
         @Override public void handleMessage(Message msg) {

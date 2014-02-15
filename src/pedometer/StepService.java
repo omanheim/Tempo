@@ -19,11 +19,11 @@
 package pedometer;
 import upenn.pennapps.R;
 import android.app.Notification;
+
+
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -57,15 +57,14 @@ public class StepService extends Service {
     private SharedPreferences mState;
     private SharedPreferences.Editor mStateEditor;
     private Utils mUtils;
-    private SensorManager mSensorManager;
-    private Sensor mSensor;
-    private StepDetector mStepDetector;
     // private StepBuzzer mStepBuzzer; // used for debugging
     private StepDisplayer mStepDisplayer;
     private PaceUpdater mPaceUpdater;
     private DistanceNotifier mDistanceNotifier;
     private SpeedNotifier mSpeedNotifier;
-  
+    private SensorManager mSensorManager;
+    private Sensor mSensor;
+    private StepDetector mStepDetector;
     
     private PowerManager.WakeLock wakeLock;
     private NotificationManager mNM;
@@ -116,6 +115,8 @@ public class StepService extends Service {
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mReceiver, filter);
 
+        
+        //TODO: Figure out what this all does 
         mStepDisplayer = new StepDisplayer(mPedometerSettings, mUtils);
         mStepDisplayer.setSteps(mSteps = mState.getInt("steps", 0));
         mStepDisplayer.addListener(mStepListener);
@@ -213,7 +214,6 @@ public class StepService extends Service {
         public void paceChanged(int value);
         public void distanceChanged(float value);
         public void speedChanged(float value);
-        public void caloriesChanged(float value);
     }
     
     private ICallback mCallback;

@@ -58,7 +58,6 @@ public class SpeedNotifier implements PaceUpdater.Listener {
         mListener = listener;
         mUtils = utils;
         mSettings = settings;
-        mDesiredSpeed = mSettings.getDesiredSpeed();
         reloadSettings();
     }
     public void setSpeed(float speed) {
@@ -70,8 +69,7 @@ public class SpeedNotifier implements PaceUpdater.Listener {
         mStepLength = mSettings.getStepLength();
         mShouldTellSpeed = mSettings.shouldTellSpeed();
         mShouldTellFasterslower = 
-            mSettings.shouldTellFasterslower()
-            && mSettings.getMaintainOption() == PedometerSettings.M_SPEED;
+            mSettings.shouldTellFasterslower();
         notifyListener();
     }
     
