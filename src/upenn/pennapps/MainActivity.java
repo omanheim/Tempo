@@ -25,17 +25,17 @@ public class MainActivity extends Activity {
 	 * Starts a new run.
 	 * @param v, the view
 	 */
-	public void startRun(View v) {
-		Intent i = new Intent(this, RunActivity.class);
-		startActivity(i);
-	}
-	
-	/**
-	 * Exits the app.
-	 * @param v, the view
-	 */
-	public void quitGame(View v) {
-		finish();
-	}
+//	public void startRun(View v) {
+//		Intent i = new Intent(this, RunActivity.class);
+//		startActivity(i);
+//	}
+//	
+//	/**
+//	 * Exits the app.
+//	 * @param v, the view
+//	 */
+//	public void quitGame(View v) {
+//		finish();
+//	}
 
 }
