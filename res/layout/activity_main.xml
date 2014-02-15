@@ -56,12 +56,24 @@
         android:layout_height="wrap_content"
         android:text="tempo" 
         android:fontFamily="sans-serif"
-        android:textSize="100.0px"
+        android:textSize="50dp"
         android:layout_alignLeft="@+id/mainView"
         android:layout_alignTop="@+id/mainView"
         android:layout_alignRight="@+id/mainView"
         android:layout_alignBottom="@+id/mainView"
         android:layout_marginTop="70dp"
         android:gravity="center_horizontal"/>
+    
+    <Button android:id="@+id/runbutton"
+        	android:text="run >>"
+        	android:textSize="30dp"
+        	android:layout_width="160dp"
+        	android:layout_height="40dp"
+        	android:background="@drawable/solid_circle"
+        	android:onClick="onRunButtonClick"
+        	android:layout_centerVertical="true"
+        	android:layout_centerHorizontal="true"
+        	android:alpha="0.8"
+        	android:layout_marginTop="20dp" />
 
 </RelativeLayout>
