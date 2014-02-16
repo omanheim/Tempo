@@ -22,7 +22,6 @@ public class Pedometer extends Activity {
     private float mDistanceValue;
     private SharedPreferences mSettings;
     private PedometerSettings mPedometerSettings;
-    private int mDesiredPace;
     private boolean mQuitting = false; // Set when user selected Quit from menu, can be used by onPause, onStop, onDestroy
     private StepService mService;
     private TextView mStepValueView;
@@ -101,12 +100,6 @@ public class Pedometer extends Activity {
     
     protected void onRestart() {
         super.onDestroy();
-    }
-    
-    private void setDesiredPace(int desiredPace) {
-        if (mService != null) {
-                mService.setDesiredPace(desiredPace);
-        }
     }
     
     private ServiceConnection mConnection = new ServiceConnection() {

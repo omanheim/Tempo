@@ -50,9 +50,6 @@ public class PaceUpdater implements StepListener {
     /** Should we speak? */
     boolean mShouldTellFasterslower;
 
-    /** When did the TTS speak last time */
-    private long mSpokenAt = 0;
-
     public PaceUpdater(PedometerSettings settings, Utils utils) {
         mUtils = utils;
         mSettings = settings;
