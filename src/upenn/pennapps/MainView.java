@@ -30,27 +30,6 @@ public class MainView extends View {
 
 	private ConcurrentHashMap<Integer, ArrayList<Song>> mSongs;
 
-	private class Song {
-
-		public String file;
-		public String title;
-		public String artist;
-		private double bpm;
-
-		public Song(String file, String title, String artist) {
-			this.title = title;
-			this.artist = artist;
-		}
-
-		public int getBPM() {
-			return (int) bpm;
-		}
-
-		public void setBPM(double bpm) {
-			this.bpm = bpm;
-		}
-	}
-
 	private class BPMScannerThread extends AsyncTask<Song, Void, Void> {
 
 		protected Void doInBackground(Song... params) {
