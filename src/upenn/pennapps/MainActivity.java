@@ -1,12 +1,14 @@
 package upenn.pennapps;
 
 import java.io.File;
+import java.io.IOException;
 
 import android.os.Bundle;
 import android.os.Environment;
 import pedometer.*;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
@@ -26,6 +28,18 @@ public class MainActivity extends Activity {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void onPause() {
+		try {
+			Log.e("shutting down", "song library");
+			MainView.mSongs.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		super.onPause();
 	}
 
 	@Override

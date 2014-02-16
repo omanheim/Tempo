@@ -32,18 +32,16 @@ public class SongLibrary {
 	@SuppressWarnings("unchecked")
 	public SongLibrary(Context c) throws StreamCorruptedException, IOException, ClassNotFoundException {
 		mContext = c;
-		File f = new File("song_library");
-		if (f.exists()) {
-			FileInputStream s = c.openFileInput("song_library");
-			ObjectInputStream ois = new ObjectInputStream(s);
-			mSongs =  (ConcurrentHashMap<Integer, ArrayList<Song>>) ois.readObject();
-			ois.close();
-		} else {
-			mSongs = new ConcurrentHashMap<Integer, ArrayList<Song>>();
-			for (int i = 0; i < 200; i++) {
-				mSongs.put(i, new ArrayList<Song>());
+		FileInputStream s = c.openFileInput("song_library");
+		ObjectInputStream ois = new ObjectInputStream(s);
+		mSongs =  (ConcurrentHashMap<Integer, ArrayList<Song>>) ois.readObject();
+		for (Integer i: mSongs.keySet()) {
+			if (mSongs.get(i).size() > 0) {
+				System.err.println("found songs!!!");
 			}
 		}
+		ois.close();
+		s.close();
 	}
 	
 	void close() throws IOException {
@@ -51,6 +49,8 @@ public class SongLibrary {
 		ObjectOutputStream ois = new ObjectOutputStream(s);
 		ois.writeObject(mSongs);
 		ois.close();
+		s.close();
+		System.err.println("library closed");
 	}
 	
 	/**
@@ -62,7 +62,7 @@ public class SongLibrary {
 	}
 	
 	public Song getForPace(int bpm) {
-		Log.i("[songlibrary] bpm is...", "" + bpm);
+		//Log.i("[songlibrary] bpm is...", "" + bpm);
 		Song s = getForPace(bpm, 0, 0);
 		if (s == null) {
 			resetSongs();
@@ -85,7 +85,6 @@ public class SongLibrary {
 		//Log.i("looking for a song with pace...", "" + bpm);
 		ArrayList<Song> possibilities = mSongs.get(bpm);
 		for (Song s : possibilities) {
-			Log.i("time diff", "" + (System.currentTimeMillis() - s.getLastPlay()));
 			if (System.currentTimeMillis() - s.getLastPlay() > 3600000) {
 				return s;
 			}

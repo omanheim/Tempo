@@ -1,7 +1,13 @@
 package upenn.pennapps;
 
-public class Song {
+import java.io.Serializable;
 
+public class Song implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3324585158078644381L;
 	private String file;
 	private String title;
 	private String artist;

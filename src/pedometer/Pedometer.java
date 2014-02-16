@@ -98,7 +98,7 @@ public class Pedometer extends Activity {
     protected void onStop() {
     	if (mIsRunning) {
     		unbindStepService();
-    		mService.getPaceUpdater().stopSong();
+    		//mService.getPaceUpdater().stopSong();
     	}
     	if (mQuitting) {
             mPedometerSettings.saveServiceRunningWithNullTimestamp(mIsRunning);

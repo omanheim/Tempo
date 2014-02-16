@@ -32,9 +32,7 @@ import android.view.View;
 
 public class MainView extends View {
 
-	//public static ConcurrentHashMap<Integer, ArrayList<Song>> mSongs;
 	public static SongLibrary mSongs;
-	private int songCount;
 
 	private class BPMScannerThread extends AsyncTask<Song, Void, Void> {
 
@@ -51,7 +49,8 @@ public class MainView extends View {
 			HttpClient client = new DefaultHttpClient();
 			for (int songIndex = 0; songIndex < params.length; songIndex++) {
 			    Song song = params[songIndex];
-			    if (files.contains(song.getTitle())) {
+			    if (files.contains(song.getFile())) {
+			    	Log.i("found song", song.getTitle());
 			    	continue;
 			    }
 				try {
@@ -120,10 +119,9 @@ public class MainView extends View {
 										.getDouble("tempo"));
 								//Log.i("bpm to enter", "" + song.getBPM());
 								mSongs.add(song);
-								songCount++;
-								Log.i("songs loaded", "" + songCount);
+								//Log.i("songs loaded", "" + songCount);
 							} catch (JSONException e) {
-								Log.e("oops", "too bad");
+								Log.i("audio summary", "not found");
 							} finally {
 								instream.close();
 							}
@@ -161,15 +159,6 @@ public class MainView extends View {
 		init();
 	}
 
-	public void onStop() {
-		try {
-			mSongs.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	/**
          */
 	private void init() {

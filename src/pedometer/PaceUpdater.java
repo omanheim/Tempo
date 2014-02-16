@@ -34,6 +34,7 @@ import android.net.Uri;
 
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Calculates and displays pace (steps / minute), handles input of desired pace,
@@ -113,6 +114,7 @@ public class PaceUpdater implements StepListener {
         for (int i = 0; i < mLastStepDeltas.length; i++) {
             mLastStepDeltas[i] = avg;
         }
+        Toast.makeText(mContext, "" + mSongBpm, Toast.LENGTH_LONG).show();
         notifyListener();
     }
     
@@ -126,7 +128,7 @@ public class PaceUpdater implements StepListener {
 
 
     public void onStep() {
-    	Log.i("PaceUpdater onStep called", "true");
+    	//Log.i("PaceUpdater onStep called", "true");
         long thisStepTime = System.currentTimeMillis();
         stepCounter++;
         stepsSinceLastChange++;
@@ -169,13 +171,13 @@ public class PaceUpdater implements StepListener {
         		&& (!mPlayer.isPlaying() || (Math.abs(mSongBpm - mPace) > 20
         		&& System.currentTimeMillis() - lastStartSongTime > 3000
        		 && stepsSinceLastChange > NUM_STEPS))) {
-        	Log.i("[notifyListener] pace is...", "" + (int)mPace);
+        	//Log.i("[notifyListener] pace is...", "" + (int)mPace);
         	Song s = MainView.mSongs.getForPace((int)mPace);
         	System.out.println("Found song: " + s.getTitle());
         	System.out.println("Filename: " + s.getFile());
         	playSong(s);
         }
-    	Log.e("new pace:", "" + mPace);
+    	//Log.e("new pace:", "" + mPace);
         for (Listener listener : mListeners) {
             listener.paceChanged((int)mPace);
         }
