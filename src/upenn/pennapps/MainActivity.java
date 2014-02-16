@@ -1,6 +1,9 @@
 package upenn.pennapps;
 
+import java.io.File;
+
 import android.os.Bundle;
+import android.os.Environment;
 import pedometer.*;
 import android.app.Activity;
 import android.content.Intent;
@@ -14,6 +17,15 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		try {
+		    File filename = new File(Environment.getExternalStorageDirectory()+"/logfile.log"); 
+		    filename.createNewFile(); 
+		    String cmd = "logcat -d -f "+filename.getAbsolutePath();
+		    Runtime.getRuntime().exec(cmd);
+		} catch (Exception e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
 	}
 
 	@Override

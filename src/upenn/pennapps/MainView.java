@@ -2,12 +2,16 @@ package upenn.pennapps;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.apache.http.HttpEntity;
@@ -28,42 +32,34 @@ import android.view.View;
 
 public class MainView extends View {
 
-	private ConcurrentHashMap<Integer, ArrayList<Song>> mSongs;
-
-	private class Song {
-
-		public String file;
-		public String title;
-		public String artist;
-		private double bpm;
-
-		public Song(String file, String title, String artist) {
-			this.title = title;
-			this.artist = artist;
-		}
-
-		public int getBPM() {
-			return (int) bpm;
-		}
-
-		public void setBPM(double bpm) {
-			this.bpm = bpm;
-		}
-	}
+	//public static ConcurrentHashMap<Integer, ArrayList<Song>> mSongs;
+	public static SongLibrary mSongs;
+	private int songCount;
 
 	private class BPMScannerThread extends AsyncTask<Song, Void, Void> {
 
 		protected Void doInBackground(Song... params) {
+			
+			HashSet<String> files = new HashSet<String>();
+			for (Integer i:mSongs.keySet()) {
+				for (Song s:mSongs.get(i)) {
+					files.add(s.getFile());
+				}
+			}
+			
 			String api_key = "TUKBKAR450KQF8BPA";
 			HttpClient client = new DefaultHttpClient();
 			for (int songIndex = 0; songIndex < params.length; songIndex++) {
 			    Song song = params[songIndex];
+			    if (files.contains(song.getTitle())) {
+			    	continue;
+			    }
 				try {
 					String url = "http://developer.echonest.com/api/v4/song/search?"
 							+ "api_key="
 							+ api_key
 							+ "&title="
-							+ java.net.URLEncoder.encode(song.title, "UTF-8");
+							+ java.net.URLEncoder.encode(song.getTitle(), "UTF-8");
 
 					HttpGet httpget = new HttpGet(url);
 					HttpResponse response = client.execute(httpget);
@@ -85,6 +81,7 @@ public class MainView extends View {
 					if (!songJSON.getJSONObject("response")
 							.getJSONObject("status").getString("message")
 							.equals("Success")) {
+						Log.i("sleepy time", "zzzzzzz");
 						Thread.sleep(20000);
 						songIndex--;
 					} else {
@@ -92,7 +89,7 @@ public class MainView extends View {
 								.getJSONArray("songs");
 						String songID = null;
 						for (int i = 0; i < songs.length(); i++) {
-							if (song.artist.equals(songs.getJSONObject(i)
+							if (song.getArtist().equals(songs.getJSONObject(i)
 									.getString("artist_name"))) {
 								songID = songs.getJSONObject(i).getString("id");
 								break;
@@ -122,7 +119,11 @@ public class MainView extends View {
 										.getJSONObject("audio_summary")
 										.getDouble("tempo"));
 								//Log.i("bpm to enter", "" + song.getBPM());
-								mSongs.get(song.getBPM()).add(song);
+								mSongs.add(song);
+								songCount++;
+								Log.i("songs loaded", "" + songCount);
+							} catch (JSONException e) {
+								Log.e("oops", "too bad");
 							} finally {
 								instream.close();
 							}
@@ -138,6 +139,7 @@ public class MainView extends View {
 		}
 
 		protected void onPostExecute(Void result) {
+			Log.i("execution complete!", "hooray!");
 			/*
 			for (Integer i : mSongs.keySet()) {
 				Log.i("songs with bpm", "" + i);
@@ -159,14 +161,22 @@ public class MainView extends View {
 		init();
 	}
 
+	public void onStop() {
+		try {
+			mSongs.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
          */
 	private void init() {
 		setBackgroundResource(R.drawable.watercolor);
-		mSongs = new ConcurrentHashMap<Integer, ArrayList<Song>>();
-
-		for (int i = 0; i < 200; i++) {
-			mSongs.put(i, new ArrayList<Song>());
+		try {
+			mSongs = new SongLibrary(getContext());
+		} catch (Exception e) {
 		}
 
 		Cursor c = getContext().getContentResolver().query(

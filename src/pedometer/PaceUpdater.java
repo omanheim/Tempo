@@ -18,8 +18,21 @@
 
 package pedometer;
 
+import upenn.pennapps.MainView;
+import upenn.pennapps.Song;
+
+
+
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
+import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+
+import android.media.MediaPlayer;
 import android.util.Log;
 
 /**
@@ -28,33 +41,70 @@ import android.util.Log;
  * @author Levente Bagi
  */
 public class PaceUpdater implements StepListener {
-
+       
     public interface Listener {
         public void paceChanged(int value);
     }
+    
+    private int NUM_STEPS;
     private ArrayList<Listener> mListeners = new ArrayList<Listener>();
-    
-    int mCounter = 0;
-    
-    private long mLastStepTime = 0;
-    private long[] mLastStepDeltas = {-1, -1, -1, -1};
-    private int mLastStepDeltasIndex = 0;
-    private long mPace = 0;
-    
+    private long mLastStepTime;
+    private long lastStartSongTime;
+    private long[] mLastStepDeltas;
+    private int mLastStepDeltasIndex;
+    private long mPace;
+    int stepCounter; 
+    private int stepsSinceLastChange;
+    private Context mContext;
     PedometerSettings mSettings;
     Utils mUtils;
+    
+    private MediaPlayer mPlayer;
+    int mSongBpm;
+    
+    void playSong(Song song) {
+    	try {
+    		if (mPlayer.isPlaying()) {
+    			mPlayer.stop();
+    		}
+	    	mPlayer.reset();
+	        mPlayer.setDataSource(song.getFile());
+	        mPlayer.prepare();
+	        mPlayer.start();
+	        mSongBpm = song.getBPM();
+    	}
+    	catch (Exception e) {
+    	    e.printStackTrace();
+    	}
+    	lastStartSongTime = System.currentTimeMillis();
+    	stepsSinceLastChange = 0;
+    	song.setLastPlay();
+    }
+    
+    void stopSong() {
+    	if (mPlayer.isPlaying()) {
+			mPlayer.stop();
+		}
+    }
 
-    /** Desired pace, adjusted by the user */
-    int mDesiredPace;
 
-    /** Should we speak? */
-    boolean mShouldTellFasterslower;
-
-    public PaceUpdater(PedometerSettings settings, Utils utils) {
+    public PaceUpdater(Context aContext, PedometerSettings settings, Utils utils) {
+    	stepCounter = 0;
+    	mPace = 0;
+    	stepsSinceLastChange = 0;
+        mLastStepTime = 0;
+        lastStartSongTime = 0;
+        mLastStepDeltasIndex = 0;
         mUtils = utils;
+        mContext = aContext;
         mSettings = settings;
-        mDesiredPace = mSettings.getDesiredPace();
+        mPlayer = new MediaPlayer();
         reloadSettings();
+        NUM_STEPS = 30;
+        mLastStepDeltas = new long[NUM_STEPS];
+        for (int i = 0; i < NUM_STEPS; i++) {
+        	mLastStepDeltas[i] = -1;
+        }
     }
     
     public void setPace(int pace) {
@@ -67,8 +117,6 @@ public class PaceUpdater implements StepListener {
     }
     
     public void reloadSettings() {
-        mShouldTellFasterslower = 
-            mSettings.shouldTellFasterslower();
         notifyListener();
     }
     
@@ -76,14 +124,12 @@ public class PaceUpdater implements StepListener {
         mListeners.add(l);
     }
 
-    public void setDesiredPace(int desiredPace) {
-        mDesiredPace = desiredPace;
-    }
 
     public void onStep() {
     	Log.i("PaceUpdater onStep called", "true");
         long thisStepTime = System.currentTimeMillis();
-        mCounter ++;
+        stepCounter++;
+        stepsSinceLastChange++;
         
         // Calculate pace based on last x steps
         if (mLastStepTime > 0) {
@@ -111,9 +157,25 @@ public class PaceUpdater implements StepListener {
         }
         mLastStepTime = thisStepTime;
         notifyListener();
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(mContext, notification);
+            r.play();
+        } catch (Exception e) {}
     }
     
     private void notifyListener() {
+        if ( mPace > 20 
+        		&& (!mPlayer.isPlaying() || (Math.abs(mSongBpm - mPace) > 20
+        		&& System.currentTimeMillis() - lastStartSongTime > 3000
+       		 && stepsSinceLastChange > NUM_STEPS))) {
+        	Log.i("[notifyListener] pace is...", "" + (int)mPace);
+        	Song s = MainView.mSongs.getForPace((int)mPace);
+        	System.out.println("Found song: " + s.getTitle());
+        	System.out.println("Filename: " + s.getFile());
+        	playSong(s);
+        }
+    	Log.e("new pace:", "" + mPace);
         for (Listener listener : mListeners) {
             listener.paceChanged((int)mPace);
         }

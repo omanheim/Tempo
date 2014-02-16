@@ -67,9 +67,7 @@ public class StepDetector implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         Sensor sensor = event.sensor; 
         synchronized (this) {
-            if (sensor.getType() == Sensor.TYPE_ORIENTATION) {
-            }
-            else {
+            if (sensor.getType() != Sensor.TYPE_ORIENTATION) {
                 int j = (sensor.getType() == Sensor.TYPE_ACCELEROMETER) ? 1 : 0;
                 if (j == 1) {
                     float vSum = 0;
