@@ -18,8 +18,9 @@
 
 package pedometer;
 
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
+import upenn.pennapps.MainView;
+import upenn.pennapps.Song;
+
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -36,66 +37,74 @@ import android.util.Log;
  * @author Levente Bagi
  */
 public class PaceUpdater implements StepListener {
-
+       
+    public interface Listener {
+        public void paceChanged(int value);
+    }
+    
+    private int NUM_STEPS;
+    private ArrayList<Listener> mListeners = new ArrayList<Listener>();
+    private long mLastStepTime;
+    private long lastStartSongTime;
+    private long[] mLastStepDeltas;
+    private int mLastStepDeltasIndex;
+    private long mPace;
+    int stepCounter; 
+    private int stepsSinceLastChange;
+    private Context mContext;
+    PedometerSettings mSettings;
+    Utils mUtils;
+    
     private MediaPlayer mPlayer;
     int mSongBpm;
     
     void playSong(Song song) {
     	try {
-    	    FileDescriptor fd = new FileInputStream(song.file).getFD();
-
-    	    if (fd != null) {
-    	        mPlayer.setDataSource(fd);
-    	        mPlayer.prepare();
-    	        mPlayer.start();
-    	        mSongBpm = song.getBPM();
-    	    }
-    	} catch (Exception e) {
+    		if (mPlayer.isPlaying()) {
+    			mPlayer.stop();
+    		}
+	    	mPlayer.reset();
+	        mPlayer.setDataSource(song.getFile());
+	        mPlayer.prepare();
+	        mPlayer.start();
+	        mSongBpm = song.getBPM();
+    	}
+    	catch (Exception e) {
     	    e.printStackTrace();
     	}
+    	lastStartSongTime = System.currentTimeMillis();
+    	stepsSinceLastChange = 0;
+    	song.setLastPlay();
     }
     
-    public interface Listener {
-        public void paceChanged(int value);
+    void stopSong() {
+    	if (mPlayer.isPlaying()) {
+			mPlayer.stop();
+		}
     }
-    private ArrayList<Listener> mListeners = new ArrayList<Listener>();
-    
-    int mCounter = 0;
-    
-    private long mLastStepTime = 0;
-    private long[] mLastStepDeltas;
-    private int mLastStepDeltasIndex = 0;
-    private long mPace = 0;
-    private Context mContext;
-    
-    PedometerSettings mSettings;
-    Utils mUtils;
 
-    /** Desired pace, adjusted by the user */
-    int mDesiredPace;
-
-    /** Should we speak? */
-    boolean mShouldTellFasterslower;
 
     public PaceUpdater(Context aContext, PedometerSettings settings, Utils utils) {
+    	stepCounter = 0;
+    	mPace = 0;
+    	stepsSinceLastChange = 0;
+        mLastStepTime = 0;
+        lastStartSongTime = 0;
+        mLastStepDeltasIndex = 0;
         mUtils = utils;
         mContext = aContext;
         mSettings = settings;
-        mDesiredPace = mSettings.getDesiredPace();
         mPlayer = new MediaPlayer();
         reloadSettings();
-        mLastStepDeltas = new long[100];
-        for (int i = 0; i < 30; i++) {
+        NUM_STEPS = 30;
+        mLastStepDeltas = new long[NUM_STEPS];
+        for (int i = 0; i < NUM_STEPS; i++) {
         	mLastStepDeltas[i] = -1;
         }
     }
     
     public void setPace(int pace) {
         mPace = pace;
-        if (!mPlayer.isPlaying() || Math.abs(mSongBpm - pace) > 20) {
-        	playSong(null);
-        }
-        
         int avg = (int)(60*1000.0 / mPace);
         for (int i = 0; i < mLastStepDeltas.length; i++) {
             mLastStepDeltas[i] = avg;
@@ -104,8 +113,6 @@ public class PaceUpdater implements StepListener {
     }
     
     public void reloadSettings() {
-        mShouldTellFasterslower = 
-            mSettings.shouldTellFasterslower();
         notifyListener();
     }
     
@@ -113,14 +120,12 @@ public class PaceUpdater implements StepListener {
         mListeners.add(l);
     }
 
-    public void setDesiredPace(int desiredPace) {
-        mDesiredPace = desiredPace;
-    }
 
     public void onStep() {
     	Log.i("PaceUpdater onStep called", "true");
         long thisStepTime = System.currentTimeMillis();
-        mCounter ++;
+        stepCounter++;
+        stepsSinceLastChange++;
         
         // Calculate pace based on last x steps
         if (mLastStepTime > 0) {
@@ -156,6 +161,16 @@ public class PaceUpdater implements StepListener {
     }
     
     private void notifyListener() {
+        if ( mPace > 20 
+        		&& (!mPlayer.isPlaying() || (Math.abs(mSongBpm - mPace) > 20
+        		&& System.currentTimeMillis() - lastStartSongTime > 3000
+       		 && stepsSinceLastChange > NUM_STEPS))) {
+        	Log.i("[notifyListener] pace is...", "" + (int)mPace);
+        	Song s = MainView.mSongs.getForPace((int)mPace);
+        	System.out.println("Found song: " + s.getTitle());
+        	System.out.println("Filename: " + s.getFile());
+        	playSong(s);
+        }
     	Log.e("new pace:", "" + mPace);
         for (Listener listener : mListeners) {
             listener.paceChanged((int)mPace);

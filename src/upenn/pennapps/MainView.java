@@ -29,7 +29,8 @@ import android.view.View;
 
 public class MainView extends View {
 
-	private ConcurrentHashMap<Integer, ArrayList<Song>> mSongs;
+	//public static ConcurrentHashMap<Integer, ArrayList<Song>> mSongs;
+	public static SongLibrary mSongs;
 	private int songCount;
 
 	private class BPMScannerThread extends AsyncTask<Song, Void, Void> {
@@ -44,7 +45,7 @@ public class MainView extends View {
 							+ "api_key="
 							+ api_key
 							+ "&title="
-							+ java.net.URLEncoder.encode(song.title, "UTF-8");
+							+ java.net.URLEncoder.encode(song.getTitle(), "UTF-8");
 
 					HttpGet httpget = new HttpGet(url);
 					HttpResponse response = client.execute(httpget);
@@ -74,7 +75,7 @@ public class MainView extends View {
 								.getJSONArray("songs");
 						String songID = null;
 						for (int i = 0; i < songs.length(); i++) {
-							if (song.artist.equals(songs.getJSONObject(i)
+							if (song.getArtist().equals(songs.getJSONObject(i)
 									.getString("artist_name"))) {
 								songID = songs.getJSONObject(i).getString("id");
 								break;
@@ -104,7 +105,7 @@ public class MainView extends View {
 										.getJSONObject("audio_summary")
 										.getDouble("tempo"));
 								//Log.i("bpm to enter", "" + song.getBPM());
-								mSongs.get(song.getBPM()).add(song);
+								mSongs.add(song);
 								songCount++;
 								Log.i("songs loaded", "" + songCount);
 							} catch (JSONException e) {
@@ -150,11 +151,7 @@ public class MainView extends View {
          */
 	private void init() {
 		setBackgroundResource(R.drawable.watercolor);
-		mSongs = new ConcurrentHashMap<Integer, ArrayList<Song>>();
-
-		for (int i = 0; i < 200; i++) {
-			mSongs.put(i, new ArrayList<Song>());
-		}
+		mSongs = new SongLibrary();
 
 		Cursor c = getContext().getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,

@@ -81,7 +81,7 @@ public class Pedometer extends Activity {
     
     @Override
     protected void onPause() {
-        if (mIsRunning) {
+        /*if (mIsRunning) {
             unbindStepService();
         }
         if (mQuitting) {
@@ -90,12 +90,22 @@ public class Pedometer extends Activity {
         else {
             mPedometerSettings.saveServiceRunningWithTimestamp(mIsRunning);
         }
-
+		*/
         super.onPause();
     }
 
     @Override
     protected void onStop() {
+    	if (mIsRunning) {
+    		unbindStepService();
+    		mService.getPaceUpdater().stopSong();
+    	}
+    	if (mQuitting) {
+            mPedometerSettings.saveServiceRunningWithNullTimestamp(mIsRunning);
+        }
+        else {
+            mPedometerSettings.saveServiceRunningWithTimestamp(mIsRunning);
+        }
         super.onStop();
     }
 

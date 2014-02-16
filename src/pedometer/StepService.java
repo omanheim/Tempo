@@ -51,6 +51,9 @@ public class StepService extends Service {
         }
     };
     
+    public PaceUpdater getPaceUpdater() {
+    	return mPaceUpdater;
+    }
     
     @Override
     public void onCreate() {
@@ -138,21 +141,7 @@ public class StepService extends Service {
     private void unregisterDetector() {
         mSensorManager.unregisterListener(mStepDetector);
     }
-    
-    
-    /**
-     * Called by activity to pass the desired pace value, 
-     * whenever it is modified by the user.
-     * @param desiredPace
-     */
-    public void setDesiredPace(int desiredPace) {
-        mDesiredPace = desiredPace;
-        if (mPaceUpdater != null) {
-            mPaceUpdater.setDesiredPace(mDesiredPace);
-        }
-    }
-    
-    
+     
     public void reloadSettings() {
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         if (mStepDetector != null) { 
