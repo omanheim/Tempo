@@ -2,9 +2,12 @@ package upenn.pennapps;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONArray;
@@ -36,10 +39,21 @@ public class MainView extends View {
 	private class BPMScannerThread extends AsyncTask<Song, Void, Void> {
 
 		protected Void doInBackground(Song... params) {
+			
+			HashSet<String> files = new HashSet<String>();
+			for (Integer i:mSongs.keySet()) {
+				for (Song s:mSongs.get(i)) {
+					files.add(s.getFile());
+				}
+			}
+			
 			String api_key = "TUKBKAR450KQF8BPA";
 			HttpClient client = new DefaultHttpClient();
 			for (int songIndex = 0; songIndex < params.length; songIndex++) {
 			    Song song = params[songIndex];
+			    if (files.contains(song.getTitle())) {
+			    	continue;
+			    }
 				try {
 					String url = "http://developer.echonest.com/api/v4/song/search?"
 							+ "api_key="
@@ -147,11 +161,23 @@ public class MainView extends View {
 		init();
 	}
 
+	public void onStop() {
+		try {
+			mSongs.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
          */
 	private void init() {
 		setBackgroundResource(R.drawable.watercolor);
-		mSongs = new SongLibrary();
+		try {
+			mSongs = new SongLibrary(getContext());
+		} catch (Exception e) {
+		}
 
 		Cursor c = getContext().getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
