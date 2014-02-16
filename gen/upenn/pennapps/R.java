@@ -12,7 +12,9 @@ public final class R {
     }
     public static final class color {
         public static final int display_background=0x7f040001;
+        public static final int labels_color=0x7f040003;
         public static final int screen_background=0x7f040000;
+        public static final int values_color=0x7f040002;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -37,26 +39,30 @@ public final class R {
         public static final int value=0x7f050003;
     }
     public static final class drawable {
-        public static final int circle=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int solid_circle=0x7f020002;
-        public static final int watercolor=0x7f020003;
+        public static final int button_shape=0x7f020000;
+        public static final int circle=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int next_button1=0x7f020003;
+        public static final int nextbutton_shape=0x7f020004;
+        public static final int runbutton1=0x7f020005;
+        public static final int runbutton_shape=0x7f020006;
+        public static final int runman=0x7f020007;
+        public static final int runman2=0x7f020008;
+        public static final int runman3=0x7f020009;
+        public static final int solid_circle=0x7f02000a;
+        public static final int tempo_circle=0x7f02000b;
+        public static final int watercolor=0x7f02000c;
+        public static final int watercolor_blur=0x7f02000d;
+        public static final int watercolor_blur2=0x7f02000e;
     }
     public static final class id {
-        public static final int action_settings=0x7f090019;
-        public static final int box_calories=0x7f090011;
+        public static final int action_settings=0x7f090016;
         public static final int box_distance=0x7f090007;
         public static final int box_pace=0x7f09000b;
+        public static final int box_song=0x7f090013;
         public static final int box_speed=0x7f09000e;
         public static final int box_steps=0x7f090004;
-        public static final int button_desired_pace_lower=0x7f090015;
-        public static final int button_desired_pace_raise=0x7f090018;
-        public static final int calories_units=0x7f090013;
-        public static final int calories_value=0x7f090012;
-        public static final int circle=0x7f090001;
-        public static final int desired_pace_control=0x7f090014;
-        public static final int desired_pace_label=0x7f090016;
-        public static final int desired_pace_value=0x7f090017;
+        public static final int button_nextsong=0x7f090011;
         public static final int distance_units=0x7f090009;
         public static final int distance_value=0x7f090008;
         public static final int mainView=0x7f090000;
@@ -64,11 +70,15 @@ public final class R {
         public static final int pace_value=0x7f09000c;
         public static final int row_1=0x7f090003;
         public static final int row_2=0x7f09000a;
+        public static final int row_3=0x7f090012;
         public static final int runbutton=0x7f090002;
+        public static final int song_units=0x7f090015;
+        public static final int song_value=0x7f090014;
         public static final int speed_units=0x7f090010;
         public static final int speed_value=0x7f09000f;
         public static final int step_units=0x7f090006;
         public static final int step_value=0x7f090005;
+        public static final int tempo=0x7f090001;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

@@ -1,7 +1,5 @@
 package pedometer;
 
-import java.io.FileDescriptor;
-
 import upenn.pennapps.R;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -9,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -17,19 +15,16 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
-import upenn.pennapps.Song;
-import java.io.FileInputStream;
+
 
 public class Pedometer extends Activity {
-	
-	private int mStepValue;
     private int mPaceValue;
     private float mDistanceValue;
+    private long appStartTime;
     private SharedPreferences mSettings;
     private PedometerSettings mPedometerSettings;
     private boolean mQuitting = false; // Set when user selected Quit from menu, can be used by onPause, onStop, onDestroy
     private StepService mService;
-    private TextView mStepValueView;
     private TextView mPaceValueView;
     private TextView mDistanceValueView;
     TextView mDesiredPaceView;
@@ -43,9 +38,10 @@ public class Pedometer extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mStepValue = 0;
         mPaceValue = 0;
         setContentView(R.layout.pedometer);
+        appStartTime = System.currentTimeMillis();
+        new TimeTask().execute();
     }
     
     @Override
@@ -73,7 +69,6 @@ public class Pedometer extends Activity {
         
         mPedometerSettings.clearServiceRunning();
 
-        mStepValueView     = (TextView) findViewById(R.id.step_value);
         mPaceValueView     = (TextView) findViewById(R.id.pace_value);
         mDistanceValueView = (TextView) findViewById(R.id.distance_value);
 //        mDesiredPaceView   = (TextView) findViewById(R.id.desired_pace_value);
@@ -97,6 +92,7 @@ public class Pedometer extends Activity {
     @Override
     protected void onStop() {
     	if (mIsRunning) {
+    		stopStepService();
     		unbindStepService();
     		//mService.getPaceUpdater().stopSong();
     	}
@@ -209,7 +205,35 @@ public class Pedometer extends Activity {
             }
         }
         
-    };
+	};
 
-  
+	class TimeTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+		}
+		
+		@Override 
+		protected void onPostExecute(Void v) {
+			long secondsElapsed = (System.currentTimeMillis() - appStartTime) / 1000;
+			int hoursElapsed = (int) secondsElapsed / 3600;
+			secondsElapsed -= (hoursElapsed*3600);
+			int minutesElapsed = (int) secondsElapsed / 60;
+			secondsElapsed -= (minutesElapsed*60);
+			Log.i("Hours: ", "" + hoursElapsed);
+			Log.i("Minutes: ", "" + minutesElapsed);
+			Log.i("Seconds: ", "" + secondsElapsed);
+			new TimeTask().execute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			try { 
+				Thread.sleep(20); 
+			} catch (Exception e) { }			
+			return null;
+		}
+	}
+	
+
 }
