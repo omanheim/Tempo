@@ -59,6 +59,7 @@ public class PaceUpdater implements StepListener {
     int mSongBpm;
     
     void playSong(Song song) {
+    	Log.i("playing", song.getTitle());
     	try {
     		if (mPlayer.isPlaying()) {
     			mPlayer.stop();
@@ -82,7 +83,6 @@ public class PaceUpdater implements StepListener {
 			mPlayer.stop();
 		}
     }
-
 
     public PaceUpdater(Context aContext, PedometerSettings settings, Utils utils) {
     	stepCounter = 0;
