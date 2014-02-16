@@ -20,6 +20,8 @@ package pedometer;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 /**
  * Calculates and displays pace (steps / minute), handles input of desired pace,
  * notifies user if he/she has to go faster or slower.  
@@ -82,6 +84,7 @@ public class PaceUpdater implements StepListener {
     }
 
     public void onStep() {
+    	Log.i("PaceUpdater onStep called", "true");
         long thisStepTime = System.currentTimeMillis();
         mCounter ++;
         
@@ -93,15 +96,15 @@ public class PaceUpdater implements StepListener {
             mLastStepDeltasIndex = (mLastStepDeltasIndex + 1) % mLastStepDeltas.length;
             
             long sum = 0;
-            boolean isMeaningfull = true;
+            boolean isMeaningful = true;
             for (int i = 0; i < mLastStepDeltas.length; i++) {
                 if (mLastStepDeltas[i] < 0) {
-                    isMeaningfull = false;
+                    isMeaningful = false;
                     break;
                 }
                 sum += mLastStepDeltas[i];
             }
-            if (isMeaningfull && sum > 0) {
+            if (isMeaningful && sum > 0) {
                 long avg = sum / mLastStepDeltas.length;
                 mPace = 60*1000 / avg;
             }

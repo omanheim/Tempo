@@ -124,7 +124,7 @@ public class MainView extends View {
 										.getJSONArray("songs").getJSONObject(0)
 										.getJSONObject("audio_summary")
 										.getDouble("tempo"));
-								Log.i("bpm to enter", "" + song.getBPM());
+								//Log.i("bpm to enter", "" + song.getBPM());
 								mSongs.get(song.getBPM()).add(song);
 							} finally {
 								instream.close();
