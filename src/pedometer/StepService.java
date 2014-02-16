@@ -1,20 +1,17 @@
 package pedometer;
 
 import upenn.pennapps.R;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
-public class StepService2 extends Service {
+public class StepService extends Service {
 	
 	private SharedPreferences mSettings;
     private PedometerSettings mPedometerSettings;
@@ -40,6 +37,7 @@ public class StepService2 extends Service {
      */
     PaceUpdater.Listener mPaceListener = new PaceUpdater.Listener() {
         public void paceChanged(int value) {
+        	//Log.i("paceChanged in pace listener", "true");
             mPace = value;
             passValue();
         }
@@ -47,12 +45,16 @@ public class StepService2 extends Service {
             if (mCallback != null) {
                 mCallback.paceChanged(mPace);
             }
+            else {
+            	//Log.i("mCallback is null in StepService", "in mPaceListener");
+            }
         }
     };
     
     
     @Override
     public void onCreate() {
+        //Log.i("creating step service", "in step");
         super.onCreate();
        
         // Load settings
@@ -98,9 +100,9 @@ public class StepService2 extends Service {
         Toast.makeText(this, getText(R.string.started), Toast.LENGTH_SHORT).show();
     }
     
-    @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
+    public int onStartCommand(Intent intent, int flags, int startId) {
+    	//Log.i("starting step s", "onStart");
+        return super.onStartCommand(intent, flags, startId);
     }
     
     @Override
@@ -167,15 +169,13 @@ public class StepService2 extends Service {
      * IPC.
      */
     public class StepBinder extends Binder {
-        StepService2 getService() {
-            return StepService2.this;
+        StepService getService() {
+            return StepService.this;
         }
     }
     
-	@Override
-	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public IBinder onBind(Intent intent) {
+	    return mBinder;
 	}
 
     public interface ICallback {
@@ -184,7 +184,6 @@ public class StepService2 extends Service {
         public void distanceChanged(float value);
         public void speedChanged(float value);
     }
-    
 
     public void registerCallback(ICallback cb) {
         mCallback = cb;

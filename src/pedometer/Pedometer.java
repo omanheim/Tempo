@@ -12,18 +12,18 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
 
-public class Pedometer2 extends Activity {
+public class Pedometer extends Activity {
 	
 	private int mStepValue;
     private int mPaceValue;
     private float mDistanceValue;
     private SharedPreferences mSettings;
     private PedometerSettings mPedometerSettings;
-    private int mDesiredPace;
     private boolean mQuitting = false; // Set when user selected Quit from menu, can be used by onPause, onStop, onDestroy
-    private StepService2 mService;
+    private StepService mService;
     private TextView mStepValueView;
     private TextView mPaceValueView;
     private TextView mDistanceValueView;
@@ -56,7 +56,7 @@ public class Pedometer2 extends Activity {
         mPedometerSettings = new PedometerSettings(mSettings);
         // Read from preferences if the service was running on the last onPause
         mIsRunning = mPedometerSettings.isServiceRunning();
-        
+
         // Start the service if this is considered to be an application start (last onPause was long ago)
         if (!mIsRunning && mPedometerSettings.isNewStart()) {
             startStepService();
@@ -102,36 +102,35 @@ public class Pedometer2 extends Activity {
         super.onDestroy();
     }
     
-    private void setDesiredPace(int desiredPace) {
-        if (mService != null) {
-                mService.setDesiredPace(desiredPace);
-        }
-    }
-    
     private ServiceConnection mConnection = new ServiceConnection() {
+    	@Override
         public void onServiceConnected(ComponentName className, IBinder service) {
-            mService = ((StepService2.StepBinder)service).getService();
+    		Log.i("onServiceConnected called", "mConnection method");
+            mService = ((StepService.StepBinder)service).getService();
             mService.reloadSettings();
+            mService.registerCallback(mCallback);
             
         }
 
         public void onServiceDisconnected(ComponentName className) {
+        	Log.i("mServivce disconnected", "aliza");
             mService = null;
         }
     };
     
 
     private void startStepService() {
+    	Log.i("step service started", "in pedometer");
         if (!mIsRunning) {
             mIsRunning = true;
-            startService(new Intent(Pedometer2.this,
-                    StepService2.class));
+            startService(new Intent(Pedometer.this,
+                    StepService.class));
         }
     }
     
     private void bindStepService() {
-        bindService(new Intent(Pedometer2.this, 
-                StepService2.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
+        bindService(new Intent(Pedometer.this, 
+                StepService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
     }
 
     private void unbindStepService() {
@@ -140,8 +139,8 @@ public class Pedometer2 extends Activity {
     
     private void stopStepService() {
         if (mService != null) {
-            stopService(new Intent(Pedometer2.this,
-                  StepService2.class));
+            stopService(new Intent(Pedometer.this,
+                  StepService.class));
         }
         mIsRunning = false;
     }
@@ -155,11 +154,12 @@ public class Pedometer2 extends Activity {
     private static final int SPEED_MSG = 4;
  
     // TODO: unite all into 1 type of message
-    private StepService2.ICallback mCallback = new StepService2.ICallback() {
+    private StepService.ICallback mCallback = new StepService.ICallback() {
         public void stepsChanged(int value) {
             mHandler.sendMessage(mHandler.obtainMessage(STEPS_MSG, value, 0));
         }
         public void paceChanged(int value) {
+        	//Log.i("paceChanged", "intermediate step");
             mHandler.sendMessage(mHandler.obtainMessage(PACE_MSG, value, 0));
         }
         public void distanceChanged(float value) {
@@ -178,6 +178,7 @@ public class Pedometer2 extends Activity {
                     mStepValueView.setText("" + mStepValue);
                     break;
                 case PACE_MSG:
+                	Log.i("pace message received", "true");
                     mPaceValue = msg.arg1;
                     if (mPaceValue <= 0) { 
                         mPaceValueView.setText("0");
@@ -198,6 +199,7 @@ public class Pedometer2 extends Activity {
                     }
                     break;
                 default:
+                	Log.i("default case", "oli");
                     super.handleMessage(msg);
             }
         }
