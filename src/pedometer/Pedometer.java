@@ -76,7 +76,7 @@ public class Pedometer extends Activity {
         mStepValueView     = (TextView) findViewById(R.id.step_value);
         mPaceValueView     = (TextView) findViewById(R.id.pace_value);
         mDistanceValueView = (TextView) findViewById(R.id.distance_value);
-        mDesiredPaceView   = (TextView) findViewById(R.id.desired_pace_value);
+//        mDesiredPaceView   = (TextView) findViewById(R.id.desired_pace_value);
     }
     
     @Override

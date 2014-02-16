@@ -149,7 +149,8 @@ public class PaceUpdater implements StepListener {
             }
             if (isMeaningful && sum > 0) {
                 long avg = sum / mLastStepDeltas.length;
-                mPace = 60*1000 / avg;
+                if (avg == 0) mPace = 0;
+                else mPace = 60*1000 / avg;
             }
             else {
                 mPace = -1;
