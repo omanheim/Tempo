@@ -129,7 +129,7 @@ public class Pedometer extends Activity {
     }
     
     private void bindStepService() {
-        boolean b = bindService(new Intent(Pedometer.this, 
+        bindService(new Intent(Pedometer.this, 
                 StepService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
     }
 

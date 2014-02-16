@@ -1,17 +1,14 @@
 package pedometer;
 
 import upenn.pennapps.R;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
 public class StepService extends Service {

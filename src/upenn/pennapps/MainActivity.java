@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	public static final int RunActivity_ID = 1;
@@ -25,7 +24,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void onRunButtonClick(View v){
-		startActivity(new Intent(this, Pedometer2.class));
+		startActivity(new Intent(this, Pedometer.class));
 	}
 
 }
