@@ -32,16 +32,21 @@ public class SongLibrary {
 	@SuppressWarnings("unchecked")
 	public SongLibrary(Context c) throws StreamCorruptedException, IOException, ClassNotFoundException {
 		mContext = c;
-		FileInputStream s = c.openFileInput("song_library");
-		ObjectInputStream ois = new ObjectInputStream(s);
-		mSongs =  (ConcurrentHashMap<Integer, ArrayList<Song>>) ois.readObject();
-		for (Integer i: mSongs.keySet()) {
-			if (mSongs.get(i).size() > 0) {
-				System.err.println("found songs!!!");
+		File f = new File("song_library");
+		if (f.exists()) {
+			System.err.println("found file!");
+			FileInputStream s = c.openFileInput("song_library");
+			ObjectInputStream ois = new ObjectInputStream(s);
+			mSongs =  (ConcurrentHashMap<Integer, ArrayList<Song>>) ois.readObject();
+			ois.close();
+			s.close();
+		} else {
+			System.err.println("didn't found file!");
+			mSongs = new ConcurrentHashMap<Integer, ArrayList<Song>>();
+			for (int i = 0; i < 200; i++) {
+				mSongs.put(i, new ArrayList<Song>());
 			}
 		}
-		ois.close();
-		s.close();
 	}
 	
 	void close() throws IOException {
@@ -50,7 +55,6 @@ public class SongLibrary {
 		ois.writeObject(mSongs);
 		ois.close();
 		s.close();
-		System.err.println("library closed");
 	}
 	
 	/**

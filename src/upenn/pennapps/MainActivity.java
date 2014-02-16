@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
 	public void onPause() {
 		try {
 			Log.e("shutting down", "song library");
-			MainView.mSongs.close();
+			if (MainView.mSongs != null) MainView.mSongs.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
