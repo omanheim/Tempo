@@ -43,7 +43,7 @@ public class SongLibrary {
 		} else {
 			System.err.println("didn't found file!");
 			mSongs = new ConcurrentHashMap<Integer, ArrayList<Song>>();
-			for (int i = 0; i < 200; i++) {
+			for (int i = -1; i < 200; i++) {
 				mSongs.put(i, new ArrayList<Song>());
 			}
 		}

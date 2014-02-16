@@ -94,8 +94,11 @@ public class MainView extends View {
 								break;
 							}
 						}
-						if (songID == null)
+						if (songID == null) {
+							song.setBPM(-1);
+							mSongs.add(song);
 							continue;
+						}
 						url = "http://developer.echonest.com/api/v4/song/profile?"
 								+ "api_key="
 								+ api_key
@@ -122,6 +125,8 @@ public class MainView extends View {
 								//Log.i("songs loaded", "" + songCount);
 							} catch (JSONException e) {
 								Log.i("audio summary", "not found");
+								song.setBPM(-1);
+								mSongs.add(song);
 							} finally {
 								instream.close();
 							}
