@@ -25,8 +25,8 @@ public class MainActivity extends Activity {
 	}
 	
 	public void onRunButtonClick(View v){
-		if (((MainView)findViewById(R.id.mainView)).songsLoaded()) {
-			startActivity(new Intent(this, Pedometer2.class));
+		if (((MainView)findViewById(R.id.mainView)).songsLoaded() || true) {
+			startActivity(new Intent(this, Pedometer.class));
 		} else {
 			Toast.makeText(this, "Songs not loaded yet!", Toast.LENGTH_LONG).show();
 		}
