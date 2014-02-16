@@ -163,37 +163,26 @@ public class Pedometer extends Activity {
     
     //FROM HERE ON: Handles getting relevant info from the StepService class 
     
-    private static final int STEPS_MSG = 1;
-    private static final int PACE_MSG = 2;
-    private static final int DISTANCE_MSG = 3;
-    private static final int SPEED_MSG = 4;
+    private static final int PACE_MSG = 1;
+    private static final int DISTANCE_MSG = 2;
  
     // TODO: unite all into 1 type of message
     private StepService.ICallback mCallback = new StepService.ICallback() {
-        public void stepsChanged(int value) {
-            mHandler.sendMessage(mHandler.obtainMessage(STEPS_MSG, value, 0));
-        }
         public void paceChanged(int value) {
         	//Log.i("paceChanged", "intermediate step");
             mHandler.sendMessage(mHandler.obtainMessage(PACE_MSG, value, 0));
         }
         public void distanceChanged(float value) {
+        	Log.i("distance", "intermediate step");
             mHandler.sendMessage(mHandler.obtainMessage(DISTANCE_MSG, (int)(value*1000), 0));
-        }
-        public void speedChanged(float value) {
-            mHandler.sendMessage(mHandler.obtainMessage(SPEED_MSG, (int)(value*1000), 0));
         }
     };
     
     private Handler mHandler = new Handler() {
         @Override public void handleMessage(Message msg) {
             switch (msg.what) {
-                case STEPS_MSG:
-                    mStepValue = (int)msg.arg1;
-                    mStepValueView.setText("" + mStepValue);
-                    break;
                 case PACE_MSG:
-                	Log.i("pace message received", "true");
+                	//Log.i("pace message received", "true");
                     mPaceValue = msg.arg1;
                     if (mPaceValue <= 0) { 
                         mPaceValueView.setText("0");
@@ -203,6 +192,7 @@ public class Pedometer extends Activity {
                     }
                     break;
                 case DISTANCE_MSG:
+                	Log.i("distance message received", "true");
                     mDistanceValue = ((int)msg.arg1)/1000f;
                     if (mDistanceValue <= 0) { 
                         mDistanceValueView.setText("0");

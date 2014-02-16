@@ -19,6 +19,7 @@ public class StepService extends Service {
     private Sensor mSensor;
     private StepDetector mStepDetector;
     private PaceUpdater mPaceUpdater;
+    private DistanceUpdater mDistanceUpdater;
     private Utils mUtils;
     private int mDesiredPace;
     private SharedPreferences mState;
@@ -45,15 +46,27 @@ public class StepService extends Service {
             if (mCallback != null) {
                 mCallback.paceChanged(mPace);
             }
-            else {
-            	//Log.i("mCallback is null in StepService", "in mPaceListener");
-            }
         }
     };
     
     public PaceUpdater getPaceUpdater() {
     	return mPaceUpdater;
     }
+    
+    /**
+     * Forwards distance values from DistanceNotifier to the activity. 
+     */
+    private DistanceUpdater.Listener mDistanceListener = new DistanceUpdater.Listener() {
+        public void distanceChanged(float value) {
+            mDistance = value;
+            passValue();
+        }
+        public void passValue() {
+            if (mCallback != null) {
+                mCallback.distanceChanged(mDistance);
+            }
+        }
+    };
     
     @Override
     public void onCreate() {
@@ -67,9 +80,8 @@ public class StepService extends Service {
         mUtils = Utils.getInstance();
         mUtils.setService(this);
         mUtils.initTTS();
-        
-       
-        /* START STEP DETECTOR, ADD PACELISTENER
+
+        /* START STEP DETECTOR, ADD PaceUpdater and DistanceUpdater
         PaceUpdater's onStep() method is called by the StepDetector*/
 
         mStepDetector = new StepDetector();
@@ -80,21 +92,18 @@ public class StepService extends Service {
         mPaceUpdater.setPace(mPace = mState.getInt("pace", 0));
         mPaceUpdater.addListener(mPaceListener);
         mStepDetector.addStepListener(mPaceUpdater);
+        
+        mDistanceUpdater = new DistanceUpdater(mDistanceListener, mPedometerSettings, mUtils);
+        mDistanceUpdater.setDistance(mDistance = mState.getFloat("distance", 0));
+        mStepDetector.addStepListener(mDistanceUpdater);
+        
         /*
         mStepDisplayer = new StepDisplayer(mPedometerSettings, mUtils);
         mStepDisplayer.setSteps(mSteps = mState.getInt("steps", 0));
         mStepDisplayer.addListener(mStepListener);
         mStepDetector.addStepListener(mStepDisplayer);
+*/
 
-        mDistanceNotifier = new DistanceNotifier(mDistanceListener, mPedometerSettings, mUtils);
-        mDistanceNotifier.setDistance(mDistance = mState.getFloat("distance", 0));
-        mStepDetector.addStepListener(mDistanceNotifier);
-        
-        mSpeedNotifier    = new SpeedNotifier(mSpeedListener,    mPedometerSettings, mUtils);
-        mSpeedNotifier.setSpeed(mSpeed = mState.getFloat("speed", 0));
-        mPaceUpdater.addListener(mSpeedNotifier);*/
-        
-     
         // Used when debugging:
         // mStepBuzzer = new StepBuzzer(this);
         // mStepDetector.addStepListener(mStepBuzzer);
@@ -149,7 +158,9 @@ public class StepService extends Service {
                     Float.valueOf(mSettings.getString("sensitivity", "10"))
             );
         }
-        if (mPaceUpdater     != null) mPaceUpdater.reloadSettings();
+        if (mPaceUpdater!= null) {
+        	mPaceUpdater.reloadSettings();
+        }
     }
 	
 	 /**
@@ -168,10 +179,8 @@ public class StepService extends Service {
 	}
 
     public interface ICallback {
-        public void stepsChanged(int value);
         public void paceChanged(int value);
         public void distanceChanged(float value);
-        public void speedChanged(float value);
     }
 
     public void registerCallback(ICallback cb) {
