@@ -4,9 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="@dimen/margin" 
-    android:background="#fff">
-    
-    
+    android:background="@drawable/watercolor_blur2">
     
     <LinearLayout android:id="@+id/row_1"
         android:orientation="horizontal" 
@@ -27,18 +25,19 @@
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal" 
-                android:background="@color/display_background" 
+                android:background="@color/values_color" 
                 android:paddingLeft="@dimen/padding" 
                 android:paddingRight="@dimen/padding" 
                 android:paddingTop="@dimen/padding"
-                android:text=""/>
+                android:text=""
+                android:alpha="0.8"/>
             <TextView android:id="@+id/step_units"
                 android:gravity="center_horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/units" 
-                android:text="@string/steps" 
-                android:background="@color/display_background" 
+                android:text="time" 
+                android:background="@color/labels_color" 
                 android:paddingBottom="@dimen/padding"/>
 
         </LinearLayout>
@@ -55,18 +54,19 @@
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal" 
-                android:background="@color/display_background" 
+                android:background="@color/values_color" 
                 android:paddingTop="@dimen/padding" 
                 android:paddingRight="@dimen/padding" 
                 android:paddingLeft="@dimen/padding"
-                android:text=""/>
+                android:text=""
+                android:alpha="0.8"/>
             <TextView android:id="@+id/distance_units"
                 android:gravity="center_horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/units"
-                android:text="@string/kilometers" 
-                android:background="@color/display_background" 
+                android:text="distance(miles)" 
+                android:background="@color/labels_color" 
                 android:paddingBottom="@dimen/padding"/>
 
         </LinearLayout>
@@ -89,12 +89,13 @@
                 android:gravity="center_horizontal"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:background="@color/display_background" 
+                android:background="@color/values_color" 
                 android:textSize="@dimen/small_value" 
                 android:paddingLeft="@dimen/padding" 
                 android:paddingRight="@dimen/padding" 
                 android:paddingTop="@dimen/padding"
-                android:text=""/>
+                android:text=""
+                android:alpha="0.8"/>
             <TextView android:id="@+id/pace_units"
                 android:gravity="center_horizontal"
                 android:layout_width="fill_parent"
@@ -102,7 +103,7 @@
                 android:textSize="@dimen/units"
                 android:text="@string/steps_per_minute" 
                 android:paddingBottom="@dimen/padding" 
-                android:background="@color/display_background"/>
+                android:background="@color/labels_color"/>
                          
         </LinearLayout>
 
@@ -117,23 +118,24 @@
                 android:gravity="center_horizontal"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:background="@color/display_background" 
+                android:background="@color/values_color" 
                 android:textSize="@dimen/small_value" 
                 android:paddingLeft="@dimen/padding" 
                 android:paddingRight="@dimen/padding" 
                 android:paddingTop="@dimen/padding"
-                android:text=""/>
+                android:text=""
+                android:alpha="0.8"/>
             <TextView android:id="@+id/speed_units"
                 android:gravity="center_horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/units"
-                android:text="@string/kilometers_per_hour" 
+                android:text="miles/hour" 
                 android:paddingBottom="@dimen/padding" 
-                android:background="@color/display_background"/>
+                android:background="@color/labels_color"/>
         </LinearLayout>
 
-        <LinearLayout android:id="@+id/box_calories"
+        <!-- <LinearLayout android:id="@+id/box_calories"
             android:orientation="vertical" 
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
@@ -143,12 +145,13 @@
                 android:gravity="center_horizontal"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:background="@color/display_background" 
+                android:background="@color/values_color" 
                 android:textSize="@dimen/small_value" 
                 android:paddingLeft="@dimen/padding" 
                 android:paddingRight="@dimen/padding" 
                 android:paddingTop="@dimen/padding"
-                android:text=""/>
+                android:text=""
+                android:alpha="0.8"/>
             <TextView android:id="@+id/calories_units"
                 android:gravity="center_horizontal"
                 android:layout_width="fill_parent"
@@ -156,14 +159,14 @@
                 android:textSize="@dimen/units" 
                 android:text="@string/calories_burned" 
                 android:paddingBottom="@dimen/padding" 
-                android:background="@color/display_background"/>
+                android:background="@color/labels_color"/>
                          
-        </LinearLayout>
+        </LinearLayout> -->
 
     </LinearLayout>
 
     <!-- Desired pace/speed row -->
-    <LinearLayout
+<!--     <LinearLayout
         android:id="@+id/desired_pace_control"
         android:paddingTop="@dimen/row_spacing" 
         android:gravity="center_horizontal"
@@ -172,14 +175,19 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
     
-        <!-- Button "-", for decrementing desired pace/speed -->
+        Button "-", for decrementing desired pace/speed
         <Button android:id="@+id/button_desired_pace_lower"
             android:text="-"
             android:textSize="@dimen/button_sign"
             android:layout_width="@dimen/button"
-            android:layout_height="@dimen/button"/>
+            android:layout_height="@dimen/button"
+            android:alpha="1.0"
+            android:background="@drawable/button_shape"
+            android:layout_margin="20dp"/>
         
-        <!-- Container for desired pace/speed -->
+       
+        
+        Container for desired pace/speed
         <LinearLayout
             android:gravity="center_horizontal"
             android:orientation="vertical"
@@ -190,30 +198,89 @@
                 android:gravity="center_horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/desired_pace"/>
+                android:text="@string/desired_pace"
+                android:textSize="20dp"
+                android:layout_marginTop="10dp"/>
         
-            <!-- Current desired pace/speed -->
+            Current desired pace/speed
             <TextView android:id="@+id/desired_pace_value"
                 android:gravity="center_horizontal"
                 android:textSize="@dimen/desired_pace"
                 android:layout_width="@dimen/desired_pace_width"
-                android:layout_height="wrap_content"/>
-        
+                android:layout_height="wrap_content"
+                />
         </LinearLayout>
 
-        <!-- Button "+", for incrementing desired pace/speed -->
+        Button "+", for incrementing desired pace/speed
         <Button android:id="@+id/button_desired_pace_raise"
             android:text="+"
             android:textSize="@dimen/button_sign"
             android:layout_width="@dimen/button"
-            android:layout_height="@dimen/button"/>
+            android:layout_height="@dimen/button"
+            android:alpha="1.0"
+            android:background="@drawable/button_shape"
+            android:layout_margin="20dp"
+            />
 
+    </LinearLayout> -->
+    
+    <LinearLayout 
+        	android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+         
+         <Button android:id="@+id/button_nextsong"
+            android:background="@drawable/next_button1"
+            android:layout_margin="20dp"
+            android:layout_width="150dp"
+			android:layout_height="150dp"
+			android:gravity="center"
+            />
     </LinearLayout>
     
-    <View
+    <LinearLayout android:id="@+id/row_3"
+        android:orientation="horizontal" 
         android:layout_width="fill_parent" 
-        android:layout_height="fill_parent"
-        android:background="@drawable/watercolor"
-        android:alpha="0.7"/>
+        android:layout_height="fill_parent" 
+        android:paddingBottom="@dimen/row_spacing">
+    
+        <LinearLayout android:id="@+id/box_song"
+            android:orientation="vertical"
+            android:layout_width="fill_parent" 
+            android:layout_height="fill_parent"
+            android:gravity="center_horizontal"
+            android:paddingRight="@dimen/margin"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/song_value"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:alpha="0.8"
+                android:background="@color/values_color"
+                android:gravity="center_horizontal"
+                android:paddingLeft="@dimen/padding"
+                android:paddingRight="@dimen/padding"
+                android:paddingTop="@dimen/padding"
+                android:layout_marginTop="30dp"
+                android:textSize="@dimen/value" 
+                android:layout_weight="1"/>
+
+            <TextView android:id="@+id/song_units"
+                android:gravity="center_horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textSize="@dimen/units" 
+                android:text="now playing" 
+                android:background="@color/labels_color" 
+                android:layout_weight="5"
+                android:textAlignment="center"
+                />
+
+        </LinearLayout>
+
+       
+    </LinearLayout>
    
 </LinearLayout>
