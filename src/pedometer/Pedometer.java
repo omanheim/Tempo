@@ -1,5 +1,7 @@
 package pedometer;
 
+import java.io.FileDescriptor;
+
 import upenn.pennapps.R;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -7,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -14,6 +17,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
+import upenn.pennapps.Song;
+import java.io.FileInputStream;
 
 public class Pedometer extends Activity {
 	

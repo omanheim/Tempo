@@ -18,12 +18,16 @@
 
 package pedometer;
 
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+
+import android.media.MediaPlayer;
 import android.util.Log;
 
 /**
@@ -33,6 +37,24 @@ import android.util.Log;
  */
 public class PaceUpdater implements StepListener {
 
+    private MediaPlayer mPlayer;
+    int mSongBpm;
+    
+    void playSong(Song song) {
+    	try {
+    	    FileDescriptor fd = new FileInputStream(song.file).getFD();
+
+    	    if (fd != null) {
+    	        mPlayer.setDataSource(fd);
+    	        mPlayer.prepare();
+    	        mPlayer.start();
+    	        mSongBpm = song.getBPM();
+    	    }
+    	} catch (Exception e) {
+    	    e.printStackTrace();
+    	}
+    }
+    
     public interface Listener {
         public void paceChanged(int value);
     }
@@ -60,6 +82,7 @@ public class PaceUpdater implements StepListener {
         mContext = aContext;
         mSettings = settings;
         mDesiredPace = mSettings.getDesiredPace();
+        mPlayer = new MediaPlayer();
         reloadSettings();
         mLastStepDeltas = new long[100];
         for (int i = 0; i < 30; i++) {
@@ -69,6 +92,10 @@ public class PaceUpdater implements StepListener {
     
     public void setPace(int pace) {
         mPace = pace;
+        if (!mPlayer.isPlaying() || Math.abs(mSongBpm - pace) > 20) {
+        	playSong(null);
+        }
+        
         int avg = (int)(60*1000.0 / mPace);
         for (int i = 0; i < mLastStepDeltas.length; i++) {
             mLastStepDeltas[i] = avg;
