@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.apache.http.HttpEntity;
@@ -29,6 +30,7 @@ import android.view.View;
 public class MainView extends View {
 
 	private ConcurrentHashMap<Integer, ArrayList<Song>> mSongs;
+	private int songCount;
 
 	private class Song {
 
@@ -85,6 +87,7 @@ public class MainView extends View {
 					if (!songJSON.getJSONObject("response")
 							.getJSONObject("status").getString("message")
 							.equals("Success")) {
+						Log.i("sleepy time", "zzzzzzz");
 						Thread.sleep(20000);
 						songIndex--;
 					} else {
@@ -123,6 +126,10 @@ public class MainView extends View {
 										.getDouble("tempo"));
 								//Log.i("bpm to enter", "" + song.getBPM());
 								mSongs.get(song.getBPM()).add(song);
+								songCount++;
+								Log.i("songs loaded", "" + songCount);
+							} catch (JSONException e) {
+								Log.e("oops", "too bad");
 							} finally {
 								instream.close();
 							}
@@ -138,6 +145,7 @@ public class MainView extends View {
 		}
 
 		protected void onPostExecute(Void result) {
+			Log.i("execution complete!", "hooray!");
 			/*
 			for (Integer i : mSongs.keySet()) {
 				Log.i("songs with bpm", "" + i);

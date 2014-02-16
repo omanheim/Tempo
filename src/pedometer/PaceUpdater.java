@@ -20,6 +20,10 @@ package pedometer;
 
 import java.util.ArrayList;
 
+import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.util.Log;
 
 /**
@@ -37,9 +41,10 @@ public class PaceUpdater implements StepListener {
     int mCounter = 0;
     
     private long mLastStepTime = 0;
-    private long[] mLastStepDeltas = {-1, -1, -1, -1};
+    private long[] mLastStepDeltas;
     private int mLastStepDeltasIndex = 0;
     private long mPace = 0;
+    private Context mContext;
     
     PedometerSettings mSettings;
     Utils mUtils;
@@ -50,11 +55,16 @@ public class PaceUpdater implements StepListener {
     /** Should we speak? */
     boolean mShouldTellFasterslower;
 
-    public PaceUpdater(PedometerSettings settings, Utils utils) {
+    public PaceUpdater(Context aContext, PedometerSettings settings, Utils utils) {
         mUtils = utils;
+        mContext = aContext;
         mSettings = settings;
         mDesiredPace = mSettings.getDesiredPace();
         reloadSettings();
+        mLastStepDeltas = new long[100];
+        for (int i = 0; i < 30; i++) {
+        	mLastStepDeltas[i] = -1;
+        }
     }
     
     public void setPace(int pace) {
@@ -111,9 +121,15 @@ public class PaceUpdater implements StepListener {
         }
         mLastStepTime = thisStepTime;
         notifyListener();
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(mContext, notification);
+            r.play();
+        } catch (Exception e) {}
     }
     
     private void notifyListener() {
+    	Log.e("new pace:", "" + mPace);
         for (Listener listener : mListeners) {
             listener.paceChanged((int)mPace);
         }

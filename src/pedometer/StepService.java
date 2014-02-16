@@ -73,7 +73,7 @@ public class StepService extends Service {
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         registerDetector();
 
-        mPaceUpdater = new PaceUpdater(mPedometerSettings, mUtils);
+        mPaceUpdater = new PaceUpdater(getApplicationContext(), mPedometerSettings, mUtils);
         mPaceUpdater.setPace(mPace = mState.getInt("pace", 0));
         mPaceUpdater.addListener(mPaceListener);
         mStepDetector.addStepListener(mPaceUpdater);
