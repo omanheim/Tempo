@@ -32,7 +32,6 @@ import android.view.View;
 public class MainView extends View {
 
 	private ConcurrentHashMap<Integer, ArrayList<Song>> mSongs;
-	private boolean mSongsLoaded;
 
 	private class Song {
 
@@ -89,7 +88,7 @@ public class MainView extends View {
 					if (!songJSON.getJSONObject("response")
 							.getJSONObject("status").getString("message")
 							.equals("Success")) {
-						Thread.sleep(1000);
+						Thread.sleep(20000);
 						songIndex--;
 					} else {
 						JSONArray songs = songJSON.getJSONObject("response")
@@ -138,7 +137,6 @@ public class MainView extends View {
 				}
 			}
 			
-			mSongsLoaded = true;
 			return null;
 		}
 
@@ -167,7 +165,6 @@ public class MainView extends View {
 	/**
          */
 	private void init() {
-		mSongsLoaded = false;
 		setBackgroundResource(R.drawable.watercolor);
 		mSongs = new ConcurrentHashMap<Integer, ArrayList<Song>>();
 
@@ -192,10 +189,6 @@ public class MainView extends View {
 		}
 		Song[] a = new Song[songs.size()];
 		new BPMScannerThread().execute(songs.toArray(a));
-	}
-	
-	public boolean songsLoaded() {
-		return mSongsLoaded;
 	}
 
 	/**
