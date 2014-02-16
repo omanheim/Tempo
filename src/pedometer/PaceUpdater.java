@@ -21,6 +21,10 @@ package pedometer;
 import upenn.pennapps.MainView;
 import upenn.pennapps.Song;
 
+
+
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 import android.content.Context;
